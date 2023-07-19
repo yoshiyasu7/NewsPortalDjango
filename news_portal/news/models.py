@@ -10,18 +10,18 @@ class Author(models.Model):
 
     def update_rating(self):
         auth_p_rating = Post.objects.filter(author_id=self.pk).\
-            aggregate(r1=Coalesce(Sum('post_rating'), 0))
+            aggregate(r1=Coalesce(Sum('post_rating'), 0)).get('r1')
         auth_c_rating = Comment.objects.filter(user_id=self.user).\
-            aggregate(r2=Coalesce(Sum('comment_rating'), 0))
+            aggregate(r2=Coalesce(Sum('comment_rating'), 0)).get('r2')
         auth_p_c_rating = Comment.objects.filter(post__author__user=self.user).\
-            aggregate(r3=Coalesce(Sum('comment_rating'), 0))
+            aggregate(r3=Coalesce(Sum('comment_rating'), 0)).get('r3')
 
         self.author_rating = auth_p_rating * 3 + auth_c_rating + auth_p_c_rating
         self.save()
 
 
 class Category(models.Model):
-    name = models.CharField(unique=True)
+    name = models.CharField(unique=True, max_length=255)
 
 
 class Post(models.Model):

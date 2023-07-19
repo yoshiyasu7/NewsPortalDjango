@@ -1,0 +1,35 @@
+<!-- Наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+<!-- Подгружаем свои фильтры -->
+{% load custom_filters %}
+
+<!-- Название -->
+{% block title %}
+Latest news
+{% endblock title %}
+
+<!-- Контент страницы -->
+{% block content %}
+    <h1>Все новости</h1>
+    {% if posts %}
+        <h2>{{ posts|length }}</h2>
+        <table> <!-- Начинаем описывать таблицу -->
+            <tr> <!-- Добавляем строку -->
+                <!-- Добавляем ячейки в строку -->
+                <td>Заголовок</td>
+                <td>Дата публикации</td>
+                <td>Текст публикации</td>
+            </tr>
+
+            {% for post in posts %}
+            <tr>
+                <td>{{ post.title|censor }}</td>
+                <td>{{ post.created|date:'d.M.Y' }}</td>
+                <td>{{ post.text|truncatewords:20|censor }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h2>Новостей нет!</h2>
+    {% endif %}
+{% endblock content %}

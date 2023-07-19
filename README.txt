@@ -4,7 +4,7 @@
 
 # 1. Создать двух пользователей
 # (с помощью метода User.objects.create_user('username')).
-from news_portal.news.models import *
+from news.models import *
 
 u1 = User.objects.create_user('Тюлень534')
 u2 = User.objects.create_user('Медведь210')
@@ -14,10 +14,10 @@ Author.objects.create(user=u1)
 Author.objects.create(user=u2)
 
 # 3. Добавить 4 категории в модель Category.
-с1 = Category.objects.create('Экономика')
-с2 = Category.objects.create('Спорт')
-с3 = Category.objects.create('Политика')
-с4 = Category.objects.create('Культура')
+с1 = Category.objects.create(name='Экономика')
+с2 = Category.objects.create(name='Спорт')
+с3 = Category.objects.create(name='Политика')
+с4 = Category.objects.create(name='Культура')
 
 # 4. Добавить 2 статьи и 1 новость.
 a1 = Author.objects.get(pk=1)
@@ -37,10 +37,10 @@ n1 = Post.objects.create(title='Заголовок новости 1.',
 
 # 5. Присвоить им категории
 # (как минимум в одной статье/новости должно быть не меньше 2 категорий).
-PostCategory.objects.create(post=ar1, category=c2)
-PostCategory.objects.create(post=ar1, category=c4)
-PostCategory.objects.create(post=ar2, category=c1)
-PostCategory.objects.create(post=n1, category=c3)
+Post.objects.get(pk=1).category.add(2)
+Post.objects.get(pk=1).category.add(4)
+Post.objects.get(pk=2).category.add(1)
+Post.objects.get(pk=3).category.add(3)
 
 # 6. Создать как минимум 4 комментария к разным объектам модели Post
 # (в каждом объекте должен быть как минимум один комментарий).
@@ -48,10 +48,13 @@ ar1 = Post.objects.get(pk=1)
 ar2 = Post.objects.get(pk=2)
 n1 = Post.objects.get(pk=3)
 
-Comment.objects.create(post=ar1, user=a2, text='Комментарий к статье 1')
-Comment.objects.create(post=ar1, user=a1, text='Ответный комментарий к статье 1')
-Comment.objects.create(post=ar2, user=a1, text='Комментарий к статье 2')
-Comment.objects.create(post=n1, user=a2, text='Комментарий к статье 3')
+u1 = User.objects.get(pk=1)
+u2 = User.objects.get(pk=2)
+
+Comment.objects.create(post=ar1, user=u2, text='Комментарий к статье 1')
+Comment.objects.create(post=ar1, user=u1, text='Ответный комментарий к статье 1')
+Comment.objects.create(post=ar2, user=u1, text='Комментарий к статье 2')
+Comment.objects.create(post=n1, user=u2, text='Комментарий к статье 3')
 
 # 7. Применяя функции like() и dislike() к статьям/новостям и комментариям,
 # скорректировать рейтинги этих объектов.
