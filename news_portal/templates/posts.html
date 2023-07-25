@@ -1,13 +1,11 @@
-<!-- Наследуемся от шаблона default.html, который мы создавали для flatpages -->
 {% extends 'flatpages/default.html' %}
-<!-- Подгружаем свои фильтры -->
+
 {% load custom_filters %}
 {% load custom_tags %}
 
 
-<!-- Контент страницы -->
 {% block content %}
-    <h1>Все новости</h1>
+    <h1>Все публикации</h1>
     <h5>{% current_time '%b %d %Y' %}</h5>
 
     <hr>
@@ -32,12 +30,11 @@
 
     {% if posts %}
         <h6>{{ posts|length }}</h6>
-        <table> <!-- Начинаем описывать таблицу -->
-            <tr> <!-- Добавляем строку -->
-                <!-- Добавляем ячейки в строку -->
+        <table>
+            <tr>
                 <td>Заголовок</td>
-                <td>Дата новости</td>
-                <td>Текст новости</td>
+                <td>Дата публикации</td>
+                <td>Текст публикации</td>
             </tr>
 
             {% for post in posts %}
@@ -49,7 +46,7 @@
             {% endfor %}
         </table>
     {% else %}
-        <h2>Новостей нет!</h2>
+        <h2>Публикаций нет!</h2>
     {% endif %}
 
 {% endblock content %}

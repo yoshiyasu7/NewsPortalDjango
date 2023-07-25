@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
+from django.urls import reverse
 
 
 class Author(models.Model):
@@ -51,6 +52,12 @@ class Post(models.Model):
     def dislike(self):
         self.post_rating -= 1
         self.save()
+
+    def get_absolute_url(self):
+        if self.post_type == 'AR':
+            return reverse('articles_detail', args=[str(self.id)])
+        else:
+            return reverse('news_detail', args=[str(self.id)])
 
 
 class PostCategory(models.Model):
