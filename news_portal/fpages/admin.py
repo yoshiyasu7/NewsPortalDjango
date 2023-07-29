@@ -19,6 +19,6 @@ class FlatPageAdmin(FlatPageAdmin):
     )
 
 
-# Перерегестрируем FlatPageAdmin
+# Перерегистрируем FlatPageAdmin
 admin.site.unregister(FlatPage)
 admin.site.register(FlatPage, FlatPageAdmin)
