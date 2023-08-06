@@ -4,8 +4,10 @@
 <h2> Страница авторизованного пользователя {{request.user.username}} </h2>
 <hr>
 <div><h5> Здесь может содержаться ваша персональная информация. </h5></div>
+<p>
 {% if is_not_author %}
     <button> <a href="/sign/add/"> Хочу стать автором!</a> </button>
 {% endif %}
+</p>
 <button> <a href="/sign/logout/">Выйти</a> </button>
 {% endblock %}

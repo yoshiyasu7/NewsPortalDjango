@@ -12,6 +12,10 @@ class PostFilter(df.FilterSet):
                                   label='Авторы',
                                   queryset=Author.objects.all()
                                   )
+    category = df.ModelChoiceFilter(empty_label='Все категории',
+                                    label='Категория',
+                                    queryset=Category.objects.all()
+                                    )
     created = df.DateFilter(lookup_expr='gte',
                             label='Дата',
                             widget=forms.DateInput(attrs={'type': 'date'})
@@ -19,4 +23,4 @@ class PostFilter(df.FilterSet):
 
     class Meta:
         model = Post
-        fields = ['title', 'author', 'created',]
+        fields = ['title', 'author', 'category', 'created', ]
