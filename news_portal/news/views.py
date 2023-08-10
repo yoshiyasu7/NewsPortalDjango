@@ -6,9 +6,11 @@ from django.views.generic import (
     ListView, DetailView, CreateView,
     UpdateView, DeleteView,
 )
+
 from .models import Post, Category
 from .filters import PostFilter
 from .forms import PostForm
+from .tasks import notify_me
 
 
 class PostList(LoginRequiredMixin, ListView):
@@ -49,6 +51,8 @@ class NewsCreate(PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.post_type = 'NE'
+        post.save()
+        notify_me.delay(post.pk)
         return super().form_valid(form)
 
 
@@ -114,6 +118,8 @@ class ArticlesCreate(PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.post_type = 'AR'
+        post.save()
+        notify_me.delay(post.pk)
         return super().form_valid(form)
 
 
