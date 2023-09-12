@@ -7,14 +7,14 @@ bad_words = [
     'заголовок',
 ]
 
-cens = lambda x: '*' * len(x)
-
-# def cens1(w):
-#     return f'{w[:1]}{"*" * (len(w) - 1)}'
-
 
 @register.filter()
 def censor(value):
-    for bw in bad_words:
-        value = value.lower().replace(bw, cens(bw))
-    return value
+    words = value.split()
+    result = []
+    for word in words:
+        if word in bad_words:
+            result.append(word[0] + "*"*(len(word)-2) + word[-1])
+        else:
+            result.append(word)
+    return " ".join(result)

@@ -70,6 +70,126 @@ MIDDLEWARE = [
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'formatter_debug': {
+            'format': '{asctime} - {levelname} : {message}\n',
+            'style': '{',
+        },
+        'formatter_warning': {
+            'format': '{asctime} - {levelname} : {message} - {pathname}\n',
+            'style': '{',
+        },
+        'formatter_error': {
+            'format': '{asctime} - {levelname} : {message} - {pathname} :: {exc_info}\n',
+            'style': '{',
+        },
+        'formatter_info': {
+            'format': '{asctime} - {levelname} : {module} : {message}\n',
+            'style': '{',
+        },
+    },
+    'filters': {
+        'debug_filter': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': lambda record: record.levelno == logging.DEBUG,
+        },
+        'warning_filter': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': lambda record: record.levelno == logging.WARNING,
+        },
+        'error_filter': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': lambda record: record.levelno == logging.ERROR,
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+    },
+    'handlers': {
+        'console_debug': {
+            'level': 'DEBUG',
+            'filters': ['debug_filter', 'require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'formatter_debug',
+        },
+        'console_warning': {
+            'level': 'WARNING',
+            'filters': ['warning_filter', 'require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'formatter_warning',
+        },
+        'console_error': {
+            'level': 'ERROR',
+            'filters': ['error_filter', 'require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'formatter_error',
+        },
+        'file_general': {
+            'level': 'INFO',
+            'filters': ['require_debug_false'],
+            'class': 'logging.FileHandler',
+            'formatter': 'formatter_info',
+            'filename': 'general.log',
+        },
+        'file_errors': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'formatter': 'formatter_error',
+            'filename': 'errors.log',
+        },
+        'file_security': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'formatter_info',
+            'filename': 'security.log',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'formatter_warning',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console_debug', 'console_warning', 'console_error', 'file_general'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['file_errors', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django.server': {
+            'handlers': ['errors', 'mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'django.template': {
+            'handlers': ['errors'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'handlers': ['errors'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'django.security': {
+            'handlers': ['file_security'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
+
 ROOT_URLCONF = 'news_portal.urls'
 
 TEMPLATES = [
@@ -89,6 +209,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'news_portal.wsgi.application'
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
